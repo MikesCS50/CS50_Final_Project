@@ -35,7 +35,13 @@ def after_request(response):
 @app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    return apology("TODO")
+    
+    if request.method == "GET":
+        return render_template("index.html")
+
+    else:
+        return apology("page under construction")
+
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -127,3 +133,15 @@ def register():
 
         # return to login page
         return render_template("login.html")
+    
+
+@app.route("/estimate", methods=["GET", "POST"])
+def estimate():
+    """Estimate solar power generation"""
+
+    if request.method == "GET":
+        return render_template("estimate.html")
+
+    # if form submitted (post)
+    if request.method == "POST":
+        return render_template("estimated.html")

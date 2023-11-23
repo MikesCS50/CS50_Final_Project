@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Extimate
+{% endblock %}
+
+{% block main %}
+    <p>Fill in the form below and we can estimate your potential solar power generation</p>
+
+    <form action="/estimate" method="post">
+        <div class="mb-3">
+            <label for="location">Select location:</label>
+            <select name="location" id="location">
+                <option name="melbourne" id="melbourne">Melbourne</option>
+                <option name="sydney" id="sydney">Sydney</option>
+                <option name="brisbane" id="brisbane">Brisbane</option>
+                <option name="perth" id="perth">Perth</option>
+                <option name="adelaide" id="adelaide">Adelaide</option>
+            </select>
+            <label for="area">Total solar panel area (in m2):</label>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="area" name="area" placeholder="meter squared" type="number">
+        </div>
+        <button class="btn btn-primary" type="submit">Estimate</button>
+    </form>
+    
+{% endblock %}
