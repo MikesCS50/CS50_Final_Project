@@ -5,25 +5,97 @@
 {% endblock %}
 
 {% block main %}
-
+<div class="mb-3">
+    <p>Calculated savings based on location, solar panel size and tariff</p>
+    <p>Estimated 15% solar panel efficiency</p>
+</div>
+<div class="mb-3">
+    <table class="center" id="summary_table">
+        <tbody>
+            <ul>
+                <tr>
+                    <td><b>Location</b></td>
+                    <td>{{ location }}</td>
+                </tr>
+                <tr>
+                    <td><b>Solar panel (m<sup>2</sup>)</b></td>
+                    <td>{{ area }}</td>
+                </tr>
+                <tr>
+                    <td><b>Electricity tariff ($/kWh)</b></td>
+                    <td>${{ tariff }}</td>
+                </tr>
+                <tr>
+                    <td><b>Annual savings</b></td>
+                    <td>${{ annual_savings }}</td>
+                </tr>
+            </ul>
+        </tbody>
+    </table>
+</div>
+<div class="mb-3">
     <table class="center">
         <thead>
             <tr>
-                <th>Stock name</th>
-                <th>Price</th>
-                <th>Symbol</th>
+                <th>Month</th>
+                {% for row in mean_data %} 
+                    <th>{{ row['month'] }}</th>
+                {% endfor %}
             </tr>
         </thead>
         <tbody>
             <ul>
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>Mean solar radiation (kWh m<sup>-2</sup>)</td>
+                        {% for row in mean_data %} 
+                            <td>{{ row['mean'] }}</td>
+                        {% endfor %}
+                </tr>
+                <tr>
+                    <td>Energy generation (kWh)</td>
+                        {% for row in mean_data %} 
+                            <td>{{ row['energy_gen'] }}</td>
+                        {% endfor %}
+                </tr>
+                <tr>
+                    <td>Savings (AU$)</td>
+                        {% for row in mean_data %} 
+                            <td>{{ row['savings'] }} </td>
+                        {% endfor %}
                 </tr>
             </ul>
         </tbody>
     </table>
+</div>
+<div class="mb-3">
+    <div class="mb-3"></div>
+        <p>Click below to save data to your home screen</p>
+    </div>
+    <form>
+        <button class="btn btn-primary" id="save">Save data</button>
+    </form>
+</div>
 
+<script>
+    document.getElementById('save').addEventListener('click', function() {
+        // get data from the summary table
+        var table = document.getElementById('summary_table');
+        var rows = table.getElementsByTagName('tr');
 
+        // Prepare the data to send to the server
+        var data = [];
+        for (var i = 0; i < rows.length; i++) {
+            var cellValue = rows[i].getElementsByTagName('td')[1].innerText;
+            data.push(cellValue);
+        }
+
+            // Send the data asynchnonously to the server using an AJAX request in JSON format
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/save', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            // need to stringify the data to pass data in JSON formt
+            xhr.send(JSON.stringify(data));
+        });
+</script>
 {% endblock %}

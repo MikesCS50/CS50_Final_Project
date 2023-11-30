@@ -5,5 +5,61 @@
 {% endblock %}
 
 {% block main %}
-    <p>Some stuff here</p>
+
+    <div class="mb-3">
+        <h1>Homepage</h1>
+            <p>Estimate your potential savings using our <a href="/estimate">Estimate</a> tool. Enter your location, solar panel area in m<sup>2</sup> 
+                and electricity tariff. You can save the calculated data which will be listed below, allowing you to compare 
+                different scenarios. Please note this is an estimate only, calculated from mean solar radiation over the past 
+                several years. The calulation assumes ideal solar panel orientation, and does not factor shaded time. Currently,
+                solar panel efficiency is fixed at 15%.
+            </p>
+    </div>
+
+    <div class="mb-3">
+        <h2>Saved Data</h2>
+        <div class="mb-3">
+            <p>Below is a list of the data you have saved, showing calculated annual savings based on location, electricity 
+                tariff, solar panel area and 15% efficiency. Click delete button to delete each row or clear all saved data</p>
+        </div>
+        {% if saved_data %}
+        <div class="mb-3">
+        <table>
+            <thead>
+                <tr>
+                    <th>Location</th>
+                    <th>Solar panel area in m<sup>2</sup></th>
+                    <th>Electricity tariff in AU$/kWh</th>
+                    <th>Annual savings in AU$</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ul>
+                    {% for row in saved_data %}
+                        <tr>
+                            <td>{{ row['location'] }}</td>
+                            <td>{{ row['area'] }}</td>
+                            <td>${{ "{:.2f}".format(row['tariff']) }}</td>
+                            <td>${{ "{:.2f}".format(row['savings']) }}</td>
+                            <td>
+                                <form action="/" method="post">
+                                    <input type="hidden" name="row_id" value="{{ row['id'] }}" id="row_id">
+                                    <button class="btn btn-primary" name="delete" id="delete" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </ul>
+            </tbody>
+        </table>
+        <div class="mb-3">
+            <form action="/" method="post">
+                <button class="btn btn-primary" name="clear" id="clear" type="submit">Clear Data</button>
+            </form>
+        </div>
+        </div>
+        {% else %}
+        <p style="color:red">No saved data available</p>
+    {% endif %}
+    </div>
 {% endblock %}

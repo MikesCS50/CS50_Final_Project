@@ -6,21 +6,90 @@
 
 {% block main %}
     <p>Fill in the form below and we can estimate your potential solar power generation</p>
+    <p>&nbsp;</p>
+    <form>
+        <div class="mb-3">
+            <p>Search for your nearest weather station by latitude and longitude. You can search for your coordinates 
+                <a href="https://www.latlong.net/" target="_blank">here</a>.</p>
+            <div class="mb-3">    
+                <label for="latitude">Latitude (-10 to -81)</label>
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="firstInput" name ="firstInput" type="number" min="-81" max="-10" step="-1" required="required">
+            </div>
+            <div class="mb-3">    
+                <label for="longitude">Longitude (62 to 168)</label>
+                <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="secondInput" name="secondInput" type="number" min="62" max="168" step="1" required="required">
+            </div>
+            <button class="btn btn-primary" id="searchButton" name="searchButton">Search</button>
+        </div>
+    </form>
 
     <form action="/estimate" method="post">
-        <div class="mb-3">
+        <!-- Placeholder for the search results form -->
+        <div class="mb-3" id="secondFormPlaceholder"></div>
+        <p>&nbsp;</p>
+        <div class="mb-3" id="elementToHide">
+            <p>Or select one of the main Australian population centres</p>
             <label for="location">Select location:</label>
             <select name="location" id="location">
+                <option name="" id=""></option>
                 <option name="melbourne" id="melbourne">Melbourne</option>
                 <option name="sydney" id="sydney">Sydney</option>
                 <option name="brisbane" id="brisbane">Brisbane</option>
                 <option name="perth" id="perth">Perth</option>
                 <option name="adelaide" id="adelaide">Adelaide</option>
+                <option name="hobart" id="hobart">Hobart</option>
+                <option name="canberra" id="canberra">Canberra</option>
             </select>
-            <label for="area">Total solar panel area (in m2):</label>
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="area" name="area" placeholder="meter squared" type="number">
         </div>
-        <button class="btn btn-primary" type="submit">Estimate</button>
+        <div class="mb-3">    
+            <label for="area">Total solar panel area (in m<sup>2</sup>):</label>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="area" name="area" placeholder="meter squared" type="number" min="0.01" step="0.01" required="required">
+        </div>
+        <div class="mb-3">    
+            <label for="tariff">Current electricity tariff (in AU$/kWh):</label>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="tariff" name="tariff" placeholder="$xx.xx" type="number" min="0.01" step="0.01" required="required">
+        </div>
+        <div class="mb-3">
+            <button class="btn btn-primary" type="submit">Estimate</button>
+        </div>
     </form>
+
+    <script>
+        // Get references to the input elements and the search button
+        var firstInput = document.getElementById('firstInput');
+        var secondInput = document.getElementById('secondInput');
+        var searchButton = document.getElementById('searchButton');
+
+        // Add an event listener to the search button
+        searchButton.addEventListener('click', function (event) {
+            // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Check if the input elements were successfully selected
+            // Get the values from both input fields
+            var firstValue = firstInput.value;
+            var secondValue = secondInput.value;
+
+            // Make an AJAX request to the server
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/search', true);
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    // Replace the content of the second form placeholder with the response
+                    document.getElementById('secondFormPlaceholder').innerHTML = xhr.responseText;
+                    if (elementToHide) {
+                            elementToHide.style.display = 'none';
+                        }
+                }
+            };
+
+            // Send the values to the server
+            xhr.send(JSON.stringify({ 'firstValue': firstValue, 'secondValue': secondValue }));
+            
+        });
+
+    </script>
     
 {% endblock %}
