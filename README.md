@@ -1,6 +1,6 @@
 # Solagrid
-#### Video Demo:  <URL HERE>
-#### Description:
+#### Video Demo: 
+#### Description: A flask web application that will calculate the potential electricity generated from solar panels
 
 ## Introduction
 This is Solagrid. A flask web application that will calculate the potential electricity generated from solar panels based on the users location input in Australia. The project contains an app.py file that runs the flask app, a web scraper, sunscraper, that extracts solar radiation data for a users location
