@@ -1,5 +1,5 @@
 # Solagrid
-#### Video Demo: 
+#### Video Demo: https://youtu.be/7zTd6fTWEMo
 #### Description: A flask web application that will calculate the potential electricity generated from solar panels
 
 ## Introduction
